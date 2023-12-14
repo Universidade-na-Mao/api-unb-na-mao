@@ -13,34 +13,41 @@ const usuarioController = {
         senha: hashedPassword,
         telefone: req.body.telefone,
         email: req.body.email,
-        user_image: req.body.user_image,
-        role: req.body.role,
+        user_image: 'https://images.rawpixel.com/image_png_social_square/cHJpdmF0ZS9sci9pbWFnZXMvd2Vic2l0ZS8yMDIzLTAxL3JtNjA5LXNvbGlkaWNvbi13LTAwMi1wLnBuZw.png',
+        role: req.body.role == 'Estudante' ? req.body.role : req.body.role + ' - Aguardando Aprovação',
       };
-      // console.log(req.body);
+      
+      console.log(req.body);
       const response = await UsuarioModel.create(usuario);
     
       res
         .status(201)
-        .json({ response, message: "Usuário Registrado com Sucesso" });
+        .json({ response, message: "Usuário registrado com sucesso!" });
     } catch (error) {
       res
         .status(500)
-        .json({ error, message: "Login, Email ou Telefone Já Cadastrado no Sistema" });
+        .json({ error, message: "Login, Email ou Telefone já cadastrado no sistema" });
       console.log("Erro controller usuario\n" + error);
     }  
   },
   validaUsuario: async (req, res) => {
     try {
       const usuario = await UsuarioModel.findOne({ matricula: req.body.matricula });
-      // console.log(req.body);
       if (usuario && await bcrypt.compare(req.body.senha, usuario.senha)) {
+        const usuarioNovo = {
+          nome: usuario.nome,
+          matricula: usuario.matricula,
+          telefone: usuario.telefone,
+          user_image: usuario.user_image,
+          role: usuario.role
+        }
         res.status(201).json({
-          message: "Login Efetuado com Sucesso!",
-          response: usuario
+          message: "Bem Vindo ao UnB na Mão",
+          response: usuarioNovo
       });
       } else {
         res.status(200).json({
-          message: "Credenciais Não Encontradas no Sistema",
+          message: "Credenciais não encontradas no sistema.",
         })
       }
     } catch (error) {
@@ -50,35 +57,8 @@ const usuarioController = {
       console.log(error);
     }
   },
-  resetPassword: async (req, res) => {
-    try {
-      const { email, senha, user_image } = req.body;
-
-      // Procura o usuário pelo email no banco de dados
-      const usuario = await UsuarioModel.findOne({ email });
-      // Se o usuário for encontrado
-      if (usuario) {
-        // Atualiza a senha do usuário
-        if(senha){
-          const salt = await bcrypt.genSalt(10);
-          const hashedPassword = await bcrypt.hash(senha, salt);
-          usuario.senha = hashedPassword;
-        }
-        usuario.user_image = user_image ? user_image : usuario.user_image;
-        await usuario.save();
-        res.status(200).json({ message: "Pefil atualizado com sucesso." });
-      }
-      else {
-        // Se o usuário não for encontrado
-        res
-          .status(404)
-          .json({ message: "Usuário não encontrado com o email fornecido." });
-      }
-    } catch (error) {
-      res.status(500).json({ message: "Erro ao redefinir a senha." });
-      console.error("Erro ao redefinir a senha:", error);
-  }
-  },
 };
+
+
 usuarioController
 module.exports = usuarioController;

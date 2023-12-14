@@ -10,7 +10,7 @@ async function main () {
                     cabeca: '             (●̮̮̃•̃)    (●̮̮̃•̃)\n',
                     bracos: `             /█\\'unb'/█\\ \n`,
                     pernas: '              ||     /| \n',
-                    logo: '     ~~~~ Universidade na Mão ~~~~\n\n\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\n\n',
+                    logo: '     ~~~~ Universidade na Mão ~~~~\n\n\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\n\nDBConnection: MongoDB',
                 }
                 console.log('\n\n\n\n--------------- Bem Vindo ---------------\n\nv1.0\n' + boneco.cabeca + boneco.bracos + boneco.pernas + boneco.logo)
             })
