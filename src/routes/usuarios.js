@@ -7,6 +7,12 @@ router
     .post((req, res) => usuarioController.create(req, res))
 
     router
+  .route('/usuarios/atualizar')
+  .put((req, res) => usuarioController.atualizaDadosUsuario(req, res));
+
+    router
     .route('/login')
     .post((req,res) => usuarioController.validaUsuario(req,res))
+
+
 module.exports = router

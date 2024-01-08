@@ -57,6 +57,45 @@ const usuarioController = {
       console.log(error);
     }
   },
+  atualizaDadosUsuario: async (req, res) => {
+    try {
+      const { matricula } = req.body;
+
+      // Verifica se a matrícula foi fornecida na solicitação
+      if (!matricula) {
+        return res.status(400).json({ message: "Matrícula não fornecida." });
+      }
+
+      const updates = {
+        nome: req.body.nome,
+        telefone: req.body.telefone,
+        user_image: req.body.user_image,
+      };
+
+      // Procura o usuário pela matrícula no banco de dados
+      const usuario = await UsuarioModel.findOne({ matricula });
+
+      // Se o usuário for encontrado
+      if (usuario) {
+        // Atualiza apenas os campos permitidos
+        usuario.nome = updates.nome || usuario.nome;
+        usuario.telefone = updates.telefone || usuario.telefone;
+        usuario.user_image = updates.user_image || usuario.user_image;
+
+        await usuario.save();
+        res.status(200).json({ message: "Dados do usuário atualizados com sucesso." });
+      } else {
+        // Se o usuário não for encontrado
+        res.status(404).json({ message: "Usuário não encontrado." });
+      }
+    } catch (error) {
+      res.status(500).json({ message: "Erro ao atualizar dados do usuário.", error: error.message });
+      console.error("Erro ao atualizar dados do usuário:", error);
+    }
+  },
+
+
+
 };
 
 module.exports = usuarioController;
